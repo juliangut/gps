@@ -108,12 +108,7 @@ class Point
             }
         }
 
-        return array_map(
-            function ($component) {
-                return $this->normalizeCoordinate($component);
-            },
-            $coordinates
-        );
+        return array_map(array($this, 'normalizeCoordinate'), $coordinates);
     }
 
     /**
@@ -246,6 +241,7 @@ class Point
     /**
      * Retrieve formatted coordinate value
      *
+     * @param float $value
      * @param string $coordinate
      * @param string $format
      * @return float|string
