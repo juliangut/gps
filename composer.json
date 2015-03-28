@@ -1,0 +1,37 @@
+{
+    "name": "juliangut/gps",
+    "description": "GPS coordinates manipulation",
+    "keywords": [
+        "gps",
+        "coordinates"
+    ],
+    "homepage": "http://github.com/juliangut/gps",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Julián Gutiérrez",
+            "email": "juliangut@gmail.com",
+            "homepage": "http://juliangut.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.5",
+        "squizlabs/php_codesniffer": "~2",
+        "phpmd/phpmd": "~2.2",
+        "sebastian/phpcpd": "~2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jgut\\Gps\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Jgut\\GpsTests\\": "tests/GpsTests/"
+        }
+    }
+}
