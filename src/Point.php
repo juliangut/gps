@@ -13,23 +13,23 @@ class Point
     const LATITUDE  = 'latitude';
     const LONGITUDE = 'longitude';
 
-    const DECIMAL_DEGREES         = 'decimal_degrees';
-    const DECIMAL_MINUTES         = 'decimal_minutes';
-    const DEGREES_MINUTES_SECONDS = 'degrees_minutes_seconds';
+    const FORMAT_DD  = 'decimal_degrees';
+    const FORMAT_DM  = 'decimal_minutes';
+    const FORMAT_DMS = 'degrees_minutes_seconds';
 
     /**
      * Format for decimal degrees coordinates
      *
      * @var string
      */
-    protected $decimalDegreesFormat         = '-?\d+(\.\d+)?';
+    protected $decimalDegreesFormat = '-?\d+(\.\d+)?';
 
     /**
      * Format for decimal minutes coordinates
      *
      * @var string
      */
-    protected $decimalMinutesFormat         = '(\d+)°(\d+(\.\d+)?)([NSEW])';
+    protected $decimalMinutesFormat = '(\d+)°(\d+(\.\d+)?)([NSEW])';
 
     /**
      * Format for degrees minutes seconds coordinates
@@ -211,7 +211,7 @@ class Point
      * @param string $format
      * @return string
      */
-    public function get($format = self::DECIMAL_DEGREES)
+    public function get($format = self::FORMAT_DD)
     {
         return sprintf('%s,%s', $this->getLatitude($format), $this->getLongitude($format));
     }
@@ -222,7 +222,7 @@ class Point
      * @param string $format
      * @return float|string
      */
-    public function getLatitude($format = self::DECIMAL_DEGREES)
+    public function getLatitude($format = self::FORMAT_DD)
     {
         return $this->getCoordinate($this->latitude, self::LATITUDE, $format);
     }
@@ -233,7 +233,7 @@ class Point
      * @param string $format
      * @return float|string
      */
-    public function getLongitude($format = self::DECIMAL_DEGREES)
+    public function getLongitude($format = self::FORMAT_DD)
     {
         return $this->getCoordinate($this->longitude, self::LONGITUDE, $format);
     }
@@ -246,18 +246,18 @@ class Point
      * @param string $format
      * @return float|string
      */
-    protected function getCoordinate($value, $coordinate = self::LATITUDE, $format = self::DECIMAL_DEGREES)
+    protected function getCoordinate($value, $coordinate = self::LATITUDE, $format = self::FORMAT_DD)
     {
         switch ($format) {
-            case self::DECIMAL_DEGREES:
+            case self::FORMAT_DD:
                 return sprintf('%s', round($value, 5));
                 break;
 
-            case self::DECIMAL_MINUTES:
+            case self::FORMAT_DM:
                 return $this->toDecimalMinutes($value, $coordinate);
                 break;
 
-            case self::DEGREES_MINUTES_SECONDS:
+            case self::FORMAT_DMS:
                 return $this->toDegreesMinutesSeconds($value, $coordinate);
                 break;
         }
@@ -298,14 +298,8 @@ class Point
     final protected function toDegreesMinutesSeconds($value, $coordinate = self::LATITUDE)
     {
         $degrees = intval(abs($value));
-        $decimalMinutes = (abs($value) - floatval($degrees)) * 60;
-        $minutes = intval($decimalMinutes);
-        $seconds = round(($decimalMinutes - floatval($minutes)) * 60, 5);
-        if (intval($seconds) === 60) {
-            $minutes++;
-            $seconds = 0;
-        }
-        $seconds = rtrim($seconds, '0');
+        $minutes = intval(abs($value) * 60) % 60;
+        $seconds = round(fmod((abs($value) * 3600), 60), 5);
         $orientation = $coordinate === self::LATITUDE
             ? ($value < 0 ? 'S' : 'N')
             : ($value < 0 ? 'W' : 'E');
@@ -314,7 +308,7 @@ class Point
             '%d°%d\'%s"%s',
             $degrees,
             $minutes,
-            $seconds === '' ? 0 : $seconds,
+            $seconds,
             $orientation
         );
     }

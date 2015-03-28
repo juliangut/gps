@@ -37,18 +37,18 @@ $gpsPoint->set('41.9, 12.5'); // Rome
 $this->point->setLatitude('40°44′ 54.3″N');
 $this->point->setLongitude('73° 59′9″ W');
 
-echo $gpsPoint->get(Point::DECIMAL_DEGREES); // Default if none especified
-echo $gpsPoint->get(Point::DECIMAL_MINUTES);
-echo $gpsPoint->get(Point::DEGREES_MINUTES_SECONDS);
+echo $gpsPoint->get(Point::FORMAT_DD); // Default if none especified
+echo $gpsPoint->get(Point::FORMAT_DM);
+echo $gpsPoint->get(Point::FORMAT_DMS);
 ```
 
 ### Available formats
 
 Any of the following formats can be used to set and retrieve GPS coordinates:
 
-* Decimal Degrees `Point::DECIMAL_DEGREES`, eg: '41.9,12.5'
-* Decimal Minutes `Point::DECIMAL_DEGREES`, eg: '48°0.858277778N,2°0.2945E'
-* Degrees Minutes Seconds `Point::DEGREES_MINUTES_SECONDS`, eg: '40°44′54.3″N,73°59′9″W'
+* Decimal Degrees (DD) `Point::FORMAT_DD`, eg: '41.9,12.5'
+* Decimal Minutes (DM) `Point::FORMAT_DM`, eg: '48°0.858277778N,2°0.2945E'
+* Degrees Minutes Seconds (DMS) `Point::FORMAT_DMS`, eg: '40°44′54.3″N,73°59′9″W'
 
 ### Considerations
 

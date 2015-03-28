@@ -33,13 +33,13 @@ class PointTest extends \PHPUnit_Framework_TestCase
     public function testCreation()
     {
         $this->assertEquals(0, $this->point->getLatitude());
-        $this->assertEquals('0°0N', $this->point->getLatitude(Point::DECIMAL_MINUTES));
-        $this->assertEquals('0°0\'0"N', $this->point->getLatitude(Point::DEGREES_MINUTES_SECONDS));
+        $this->assertEquals('0°0N', $this->point->getLatitude(Point::FORMAT_DM));
+        $this->assertEquals('0°0\'0"N', $this->point->getLatitude(Point::FORMAT_DMS));
         $this->assertEquals(0, $this->point->getLongitude());
-        $this->assertEquals('0°0E', $this->point->getLongitude(Point::DECIMAL_MINUTES));
-        $this->assertEquals('0°0\'0"E', $this->point->getLongitude(Point::DEGREES_MINUTES_SECONDS));
+        $this->assertEquals('0°0E', $this->point->getLongitude(Point::FORMAT_DM));
+        $this->assertEquals('0°0\'0"E', $this->point->getLongitude(Point::FORMAT_DMS));
 
-        $this->assertEquals('0,0', $this->point->get(Point::DECIMAL_DEGREES));
+        $this->assertEquals('0,0', $this->point->get(Point::FORMAT_DD));
 
         $this->point->set();
     }
@@ -60,13 +60,13 @@ class PointTest extends \PHPUnit_Framework_TestCase
         $point = new Point('22° 57′ 8.7" S, 43° 12\' 42" W'); // Corcovado
 
         $this->assertEquals(-22.95242, $point->getLatitude());
-        $this->assertEquals('22°0.95242S', $point->getLatitude(Point::DECIMAL_MINUTES));
-        $this->assertEquals('22°57\'8.7"S', $point->getLatitude(Point::DEGREES_MINUTES_SECONDS));
+        $this->assertEquals('22°0.95242S', $point->getLatitude(Point::FORMAT_DM));
+        $this->assertEquals('22°57\'8.7"S', $point->getLatitude(Point::FORMAT_DMS));
         $this->assertEquals(-43.21167, $point->getLongitude());
-        $this->assertEquals('43°0.21167W', $point->getLongitude(Point::DECIMAL_MINUTES));
-        $this->assertEquals('43°12\'42"W', $point->getLongitude(Point::DEGREES_MINUTES_SECONDS));
+        $this->assertEquals('43°0.21167W', $point->getLongitude(Point::FORMAT_DM));
+        $this->assertEquals('43°12\'42"W', $point->getLongitude(Point::FORMAT_DMS));
 
-        $this->assertEquals('22°0.95242S,43°0.21167W', $point->get(Point::DECIMAL_MINUTES));
+        $this->assertEquals('22°0.95242S,43°0.21167W', $point->get(Point::FORMAT_DM));
 
         $this->point->set('0,0,0');
     }
@@ -86,13 +86,13 @@ class PointTest extends \PHPUnit_Framework_TestCase
         $this->point->set('41.9, 12.5'); // Rome
 
         $this->assertEquals(41.9, $this->point->getLatitude());
-        $this->assertEquals('41°0.9N', $this->point->getLatitude(Point::DECIMAL_MINUTES));
-        $this->assertEquals('41°54\'0"N', $this->point->getLatitude(Point::DEGREES_MINUTES_SECONDS));
+        $this->assertEquals('41°0.9N', $this->point->getLatitude(Point::FORMAT_DM));
+        $this->assertEquals('41°54\'0"N', $this->point->getLatitude(Point::FORMAT_DMS));
         $this->assertEquals(12.5, $this->point->getLongitude());
-        $this->assertEquals('12°0.5E', $this->point->getLongitude(Point::DECIMAL_MINUTES));
-        $this->assertEquals('12°30\'0"E', $this->point->getLongitude(Point::DEGREES_MINUTES_SECONDS));
+        $this->assertEquals('12°0.5E', $this->point->getLongitude(Point::FORMAT_DM));
+        $this->assertEquals('12°30\'0"E', $this->point->getLongitude(Point::FORMAT_DMS));
 
-        $this->assertEquals('41°54\'0"N,12°30\'0"E', $this->point->get(Point::DEGREES_MINUTES_SECONDS));
+        $this->assertEquals('41°54\'0"N,12°30\'0"E', $this->point->get(Point::FORMAT_DMS));
 
         $this->point->set('41.9,12°0.5E');
     }
@@ -110,11 +110,11 @@ class PointTest extends \PHPUnit_Framework_TestCase
         $this->point->set('48° 0.858277778N, 2°0.2945 E'); // Eiffel tower
 
         $this->assertEquals(48.85828, $this->point->getLatitude());
-        $this->assertEquals('48°0.85828N', $this->point->getLatitude(Point::DECIMAL_MINUTES));
-        $this->assertEquals('48°51\'29.8"N', $this->point->getLatitude(Point::DEGREES_MINUTES_SECONDS));
+        $this->assertEquals('48°0.85828N', $this->point->getLatitude(Point::FORMAT_DM));
+        $this->assertEquals('48°51\'29.8"N', $this->point->getLatitude(Point::FORMAT_DMS));
         $this->assertEquals(2.2945, $this->point->getLongitude());
-        $this->assertEquals('2°0.2945E', $this->point->getLongitude(Point::DECIMAL_MINUTES));
-        $this->assertEquals('2°17\'40.2"E', $this->point->getLongitude(Point::DEGREES_MINUTES_SECONDS));
+        $this->assertEquals('2°0.2945E', $this->point->getLongitude(Point::FORMAT_DM));
+        $this->assertEquals('2°17\'40.2"E', $this->point->getLongitude(Point::FORMAT_DMS));
 
         $this->point->set('48°0.85828N,2°0.2945S');
     }
@@ -136,11 +136,11 @@ class PointTest extends \PHPUnit_Framework_TestCase
         $this->point->setLongitude('73° 59′9″ W');
 
         $this->assertEquals(40.74842, $this->point->getLatitude());
-        $this->assertEquals('40°0.74842N', $this->point->getLatitude(Point::DECIMAL_MINUTES));
-        $this->assertEquals('40°44\'54.3"N', $this->point->getLatitude(Point::DEGREES_MINUTES_SECONDS));
+        $this->assertEquals('40°0.74842N', $this->point->getLatitude(Point::FORMAT_DM));
+        $this->assertEquals('40°44\'54.3"N', $this->point->getLatitude(Point::FORMAT_DMS));
         $this->assertEquals(-73.98583, $this->point->getLongitude());
-        $this->assertEquals('73°0.98583W', $this->point->getLongitude(Point::DECIMAL_MINUTES));
-        $this->assertEquals('73°59\'9"W', $this->point->getLongitude(Point::DEGREES_MINUTES_SECONDS));
+        $this->assertEquals('73°0.98583W', $this->point->getLongitude(Point::FORMAT_DM));
+        $this->assertEquals('73°59\'9"W', $this->point->getLongitude(Point::FORMAT_DMS));
 
         $this->point->set('40°44\'54.3"E,73°59\'9"W');
     }
