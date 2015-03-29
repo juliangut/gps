@@ -47,18 +47,18 @@ echo $gpsPoint->get(Point::FORMAT_DMS);
 Any of the following formats can be used to set and retrieve GPS coordinates:
 
 * Decimal Degrees (DD) `Point::FORMAT_DD`, eg: '41.9,12.5'
-* Decimal Minutes (DM) `Point::FORMAT_DM`, eg: '48°0.858277778N,2°0.2945E'
+* Decimal Minutes (DM) `Point::FORMAT_DM`, eg: '48°0.858277778N 2°0.2945E'
 * Degrees Minutes Seconds (DMS) `Point::FORMAT_DMS`, eg: '40°44′54.3″N,73°59′9″W'
 
 ### Considerations
 
-When setting coordinates spaces are optional, there is no difference between , `40° 44′ 54.3″ N, 73° 59′ 9″ W` and `40°44′54.3″N,73°59′9″W`
+When setting coordinates spaces and comma are completely optional, there is no difference between , `40° 44′ 54.3″ N, 73° 59′ 9″ W` and `40°44′54.3″N73°59′9″W`
 
 When setting coordinates you can use `′` or `'` for minutes and `″` or `"` for seconds (review raw document to see the difference between them)
 
 When retrieving coordinates won't have any spaces
 
-When retrieving coordinates `'` and `"` will be used for minutes and seconds
+When retrieving coordinates `'` and `"` will be used for minutes and seconds. Coordinates will be comma separated
 
 ## License
 

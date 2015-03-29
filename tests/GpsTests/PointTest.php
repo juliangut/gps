@@ -58,7 +58,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetCreation()
     {
-        $point = new Point('22° 57′ 8.7" S, 43° 12\' 42" W'); // Corcovado
+        $point = new Point('22° 57′ 8.7" S 43° 12\' 42" W'); // Corcovado
 
         $this->assertEquals(-22.95242, $point->getLatitude());
         $this->assertEquals('22°0.95242S', $point->getLatitude(Point::FORMAT_DM));

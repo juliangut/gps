@@ -22,21 +22,21 @@ class Point
      *
      * @var string
      */
-    protected $decimalDegreesFormat = '-?\d+(\.\d+)?';
+    protected $decimalDegreesFormat = '-?\d{1,3}(\.\d+)?([NSEW])?';
 
     /**
      * Format for decimal minutes coordinates
      *
      * @var string
      */
-    protected $decimalMinutesFormat = '(\d+)°(\d+(\.\d+)?)([NSEW])';
+    protected $decimalMinutesFormat = '(\d{1,3})°(\d{1,2}(\.\d+)?)\'?([NSEW])';
 
     /**
      * Format for degrees minutes seconds coordinates
      *
      * @var string
      */
-    protected $degreesMinutesSecondsFormat = '(\d+)°(\d+)\'(\d+(\.\d+)?)"([NSEW])';
+    protected $degreesMinutesSecondsFormat = '(\d{1,3})°(\d{1,2})\'(\d{1,2}(\.\d+)?)"([NSEW])';
 
     /**
      * @var float
@@ -101,7 +101,17 @@ class Point
         }
 
         if (count($coordinates) == 1) {
-            $coordinates = explode(',', $coordinates[0]);
+            if (strpos($coordinates[0], ',') !== false) {
+                $coordinates = explode(',', $coordinates[0]);
+            } elseif (preg_match('![NS]\d!', $coordinates[0])) {
+                $pos = strpos($coordinates[0], 'N');
+                $pos !== false ? $pos : strpos($coordinates[0], 'S');
+
+                $coordinates = array(
+                    substr($coordinates[0], 0, $pos + 1),
+                    substr($coordinates[0], $pos + 2),
+                );
+            }
 
             if (count($coordinates) !== 2) {
                 throw new \InvalidArgumentException('Argument format is invalid');
