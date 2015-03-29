@@ -8,6 +8,7 @@
 
 namespace Jgut\GPSTests;
 
+use Jgut\Gps\Gps;
 use Jgut\Gps\Point;
 
 /**
@@ -163,5 +164,21 @@ class PointTest extends \PHPUnit_Framework_TestCase
     public function testLongitudeLimit()
     {
         $this->point->setLongitude(190.01);
+    }
+
+    /**
+     * @covers Jgut\Gps\Point::distanceTo
+     * @expectedException \InvalidArgumentException
+     */
+    public function testDistance()
+    {
+        $this->point->set('47°22′0″N, 8°33′0″E'); // Zurich
+
+        $destination = new Point('46°12′0″N, 6°9′0″E'); // Geneva
+
+        $this->assertEquals(129.73, $this->point->distanceTo($destination));
+        $this->assertEquals(129727.41, $this->point->distanceTo($destination, Gps::METER));
+
+        $this->point->distanceTo($destination, 'mile');
     }
 }

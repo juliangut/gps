@@ -82,8 +82,8 @@ class Point
             ));
         }
 
-        $this->setCoordinate($coordinates[0], self::LATITUDE);
-        $this->setCoordinate($coordinates[1], self::LONGITUDE);
+        $this->setCoordinate($coordinates[0], Gps::LATITUDE);
+        $this->setCoordinate($coordinates[1], Gps::LONGITUDE);
 
         return $this;
     }
@@ -119,7 +119,7 @@ class Point
      */
     public function setLatitude($latitude)
     {
-        $this->setCoordinate($this->normalizeCoordinate($latitude), self::LATITUDE);
+        $this->setCoordinate($this->normalizeCoordinate($latitude), Gps::LATITUDE);
 
         return $this;
     }
@@ -132,7 +132,7 @@ class Point
      */
     public function setLongitude($longitude)
     {
-        $this->setCoordinate($this->normalizeCoordinate($longitude), self::LONGITUDE);
+        $this->setCoordinate($this->normalizeCoordinate($longitude), Gps::LONGITUDE);
 
         return $this;
     }
@@ -154,7 +154,7 @@ class Point
      * @param mixed $value
      * @param string $coordinate
      */
-    protected function setCoordinate($value, $coordinate = self::LATITUDE)
+    protected function setCoordinate($value, $coordinate = Gps::LATITUDE)
     {
         if (preg_match('!^' . $this->decimalDegreesFormat . '$!', $value, $matches)) {
             $result = floatval($matches[0]);
@@ -172,7 +172,7 @@ class Point
             throw new \InvalidArgumentException(sprintf('Coordinate "%s" is not set on a valid format', $value));
         }
 
-        if ($coordinate === self::LATITUDE) {
+        if ($coordinate === Gps::LATITUDE) {
             if (abs($result) > 90) {
                 throw new \InvalidArgumentException(sprintf('Coordinate "%s" exceeds latitude limits', $value));
             }
@@ -192,10 +192,10 @@ class Point
      * @param string $orientation
      * @param string $coordinate
      */
-    final protected function validateCoordinateOrientation($orientation, $coordinate = self::LATITUDE)
+    final protected function validateCoordinateOrientation($orientation, $coordinate = Gps::LATITUDE)
     {
-        if ($coordinate === self::LATITUDE && !in_array($orientation, array('N', 'S'))
-            || $coordinate === self::LONGITUDE && !in_array($orientation, array('E', 'W'))
+        if ($coordinate === Gps::LATITUDE && !in_array($orientation, array('N', 'S'))
+            || $coordinate === Gps::LONGITUDE && !in_array($orientation, array('E', 'W'))
         ) {
             throw new \InvalidArgumentException(sprintf(
                 'Orientation "%s" is not valid for %s',
@@ -211,7 +211,7 @@ class Point
      * @param string $format
      * @return string
      */
-    public function get($format = self::FORMAT_DD)
+    public function get($format = Gps::FORMAT_DD)
     {
         return sprintf('%s,%s', $this->getLatitude($format), $this->getLongitude($format));
     }
@@ -222,9 +222,9 @@ class Point
      * @param string $format
      * @return float|string
      */
-    public function getLatitude($format = self::FORMAT_DD)
+    public function getLatitude($format = Gps::FORMAT_DD)
     {
-        return $this->getCoordinate($this->latitude, self::LATITUDE, $format);
+        return $this->getCoordinate($this->latitude, Gps::LATITUDE, $format);
     }
 
     /**
@@ -233,9 +233,9 @@ class Point
      * @param string $format
      * @return float|string
      */
-    public function getLongitude($format = self::FORMAT_DD)
+    public function getLongitude($format = Gps::FORMAT_DD)
     {
-        return $this->getCoordinate($this->longitude, self::LONGITUDE, $format);
+        return $this->getCoordinate($this->longitude, Gps::LONGITUDE, $format);
     }
 
     /**
@@ -246,18 +246,18 @@ class Point
      * @param string $format
      * @return float|string
      */
-    protected function getCoordinate($value, $coordinate = self::LATITUDE, $format = self::FORMAT_DD)
+    protected function getCoordinate($value, $coordinate = Gps::LATITUDE, $format = Gps::FORMAT_DD)
     {
         switch ($format) {
-            case self::FORMAT_DD:
+            case Gps::FORMAT_DD:
                 return sprintf('%s', round($value, 5));
                 break;
 
-            case self::FORMAT_DM:
+            case Gps::FORMAT_DM:
                 return $this->toDecimalMinutes($value, $coordinate);
                 break;
 
-            case self::FORMAT_DMS:
+            case Gps::FORMAT_DMS:
                 return $this->toDegreesMinutesSeconds($value, $coordinate);
                 break;
         }
@@ -272,11 +272,11 @@ class Point
      * @param string $coordinate
      * @return string
      */
-    final protected function toDecimalMinutes($value, $coordinate = self::LATITUDE)
+    final protected function toDecimalMinutes($value, $coordinate = Gps::LATITUDE)
     {
         $degrees = intval(abs($value));
         $minutes = rtrim(round(abs($value) - floatval($degrees), 5), '0');
-        $orientation = $coordinate === self::LATITUDE
+        $orientation = $coordinate === Gps::LATITUDE
             ? ($value < 0 ? 'S' : 'N')
             : ($value < 0 ? 'W' : 'E');
 
@@ -295,12 +295,12 @@ class Point
      * @param string $coordinate
      * @return string
      */
-    final protected function toDegreesMinutesSeconds($value, $coordinate = self::LATITUDE)
+    final protected function toDegreesMinutesSeconds($value, $coordinate = Gps::LATITUDE)
     {
         $degrees = intval(abs($value));
         $minutes = intval(abs($value) * 60) % 60;
         $seconds = round(fmod((abs($value) * 3600), 60), 5);
-        $orientation = $coordinate === self::LATITUDE
+        $orientation = $coordinate === Gps::LATITUDE
             ? ($value < 0 ? 'S' : 'N')
             : ($value < 0 ? 'W' : 'E');
 
@@ -311,5 +311,45 @@ class Point
             $seconds,
             $orientation
         );
+    }
+
+    /**
+     * Calculate distance to another point
+     *
+     * @param Point $point
+     * @param string $unit
+     * @return float
+     */
+    public function distanceTo(Point $point, $unit = Gps::KILOMETER)
+    {
+        $latitudeFrom  = deg2rad($this->latitude);
+        $longitudeFrom = deg2rad($this->longitude);
+        $latitudeTo    = deg2rad(floatval($point->getLatitude()));
+        $longitudeTo   = deg2rad(floatval($this->getLongitude()));
+
+        $longitudeDelta = $longitudeTo - $longitudeFrom;
+
+        $longitudeDelta = $longitudeTo - $longitudeFrom;
+        $magnitudeA = pow(cos($latitudeTo) * sin($longitudeDelta), 2) +
+            pow(cos($latitudeFrom) * sin($latitudeTo) - sin($latitudeFrom) *
+                cos($latitudeTo) * cos($longitudeDelta), 2);
+        $magnitudeB = sin($latitudeFrom) * sin($latitudeTo) + cos($latitudeFrom) *
+            cos($latitudeTo) * cos($longitudeDelta);
+
+        $distance = atan2(sqrt($magnitudeA), $magnitudeB) * Gps::EARTH_RADIUS;
+
+        switch ($unit) {
+            case Gps::KILOMETER:
+                return round($distance, 2);
+                break;
+
+            case Gps::METER:
+                return round($distance * 1000, 2);
+                break;
+
+            default:
+                throw new \InvalidArgumentException(sprintf('Unit "%s" is not valid', $unit));
+                break;
+        }
     }
 }
