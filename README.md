@@ -60,6 +60,12 @@ When retrieving coordinates won't have any spaces
 
 When retrieving coordinates `'` and `"` will be used for minutes and seconds. Coordinates will be comma separated
 
+## Contributing
+
+Found a bug or have a feature request? [Please open a new issue](https://github.com/juliangut/gps/issues). Have a look at existing issues before
+
+See file [CONTRIBUTING.md](https://github.com/juliangut/gps/blob/master/CONTRIBUTING.md)
+
 ## License
 
 ### Release under BSD-3-Clause License.
